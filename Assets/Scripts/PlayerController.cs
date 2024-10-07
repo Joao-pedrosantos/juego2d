@@ -12,7 +12,11 @@ public class PlayerController : MonoBehaviour
     Vector2 moveInput;
     TouchingDirections touchingDirections;
 
-    public float CurrentMoveSpeed { get
+    public AudioSource footstepAudio;  // Reference to the AudioSource for footstep sounds
+
+    public float CurrentMoveSpeed 
+    { 
+        get 
         {
             if (IsMoving && !touchingDirections.IsOnWall)
             {
@@ -34,23 +38,33 @@ public class PlayerController : MonoBehaviour
 
     public bool _isMoving = false;
 
-    public bool IsMoving { get
+    public bool IsMoving 
+    { 
+        get 
         {
             return _isMoving;
         }
-        private set
+        private set 
         {
             _isMoving = value;
             animator.SetBool(AnimationStrings.isMoving, value);
+            HandleFootsteps();  // Play or stop footstep sounds based on movement
         }
     }
 
     public bool _isFacingRight = true;
-    public bool IsFacingRight { get { return _isFacingRight; } private set {
-        if (_isFacingRight != value)
+    public bool IsFacingRight 
+    { 
+        get 
+        { 
+            return _isFacingRight; 
+        } 
+        private set 
         {
-            transform.localScale *= new Vector2(-1, 1);
-        }
+            if (_isFacingRight != value)
+            {
+                transform.localScale *= new Vector2(-1, 1);
+            }
 
             _isFacingRight = value;
         }
@@ -66,31 +80,16 @@ public class PlayerController : MonoBehaviour
         touchingDirections = GetComponent<TouchingDirections>();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void FixedUpdate()
     {
         rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
-
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
-
         IsMoving = moveInput != Vector2.zero;
-
         SetFacingDirection(moveInput);
     }
 
@@ -108,11 +107,23 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        // TODO: Checar se está vivo também
         if (context.started && touchingDirections.IsGrounded)
         {
             animator.SetTrigger(AnimationStrings.jump);
             rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
+        }
+    }
+
+    // Play or stop footstep sound based on movement and grounded status
+    private void HandleFootsteps()
+    {
+        if (IsMoving && touchingDirections.IsGrounded && !footstepAudio.isPlaying)
+        {
+            footstepAudio.Play();  // Play footstep sound
+        }
+        else if ((!IsMoving || !touchingDirections.IsGrounded) && footstepAudio.isPlaying)
+        {
+            footstepAudio.Stop();  // Stop footstep sound
         }
     }
 }
