@@ -78,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 6
   m_Sprite: {fileID: -829052544, guid: ed669e883dc437440b7d7f74e911e050, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -132,6 +132,7 @@ MonoBehaviour:
   walkSpeed: 8
   jumpImpulse: 10
   airWalkSpeed: 5
+  footstepAudio: {fileID: 0}
   _isMoving: 0
   _isFacingRight: 1
 --- !u!114 &4401925989596082294
@@ -297,8 +298,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.2512855, y: 0.008518338}
-  m_Size: {x: 1.4977309, y: 2.8465722}
+  m_Offset: {x: -0.16013622, y: 0.019035578}
+  m_Size: {x: 1.2593405, y: 2.8255377}
   m_Direction: 0
 --- !u!114 &3932807105639796766
 MonoBehaviour:
