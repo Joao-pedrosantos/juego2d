@@ -6,27 +6,44 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections))]
 public class PlayerController : MonoBehaviour
 {
-    public float walkSpeed = 15f;
-    public float jumpImpulse = 10f;
-    public float airWalkSpeed = 5f;
+    public float walkSpeed = 5f;
+    public float runSpeed = 8f;
+    public float jumpImpulse = 8f;
+    public float airWalkSpeed = 3f;
     Vector2 moveInput;
     TouchingDirections touchingDirections;
 
     public AudioSource footstepAudio;  // Reference to the AudioSource for footstep sounds
+    public float walkPitch = 0.8f;  // Normal pitch for walking
+    public float runPitch = 1.3f;   // Increased pitch for running
 
     public float CurrentMoveSpeed 
     { 
         get 
         {
-            if (IsMoving && !touchingDirections.IsOnWall)
+            if (CanMove)
             {
-                if (touchingDirections.IsGrounded)
+                if (IsMoving && !touchingDirections.IsOnWall)
                 {
-                    return walkSpeed;
+                    if (touchingDirections.IsGrounded)
+                    {
+                        if (IsRunning)
+                        {
+                            return runSpeed;
+                        }
+                        else
+                        {
+                            return walkSpeed;
+                        }
+                    }
+                    else
+                    {
+                        return airWalkSpeed;
+                    }
                 }
                 else
                 {
-                    return airWalkSpeed;
+                    return 0;
                 }
             }
             else
@@ -36,7 +53,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public bool _isMoving = false;
+    [SerializeField]
+    private bool _isMoving = false;
 
     public bool IsMoving 
     { 
@@ -48,7 +66,22 @@ public class PlayerController : MonoBehaviour
         {
             _isMoving = value;
             animator.SetBool(AnimationStrings.isMoving, value);
-            HandleFootsteps();  // Play or stop footstep sounds based on movement
+        }
+    }
+
+    [SerializeField]
+    private bool _isRunning = false;
+
+    public bool IsRunning
+    {
+        get
+        {
+            return _isRunning;
+        }
+        private set
+        {
+            _isRunning = value;
+            animator.SetBool(AnimationStrings.isRunning, value);
         }
     }
 
@@ -70,6 +103,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public bool CanMove { get
+        {
+            return animator.GetBool(AnimationStrings.canMove);
+        }
+    }
+
     Rigidbody2D rb;
     Animator animator;
 
@@ -84,6 +123,7 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+        HandleFootsteps();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -91,6 +131,18 @@ public class PlayerController : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
         IsMoving = moveInput != Vector2.zero;
         SetFacingDirection(moveInput);
+    }
+
+    public void OnRun(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            IsRunning = true;
+        }
+        else if (context.canceled)
+        {
+            IsRunning = false;
+        }
     }
 
     private void SetFacingDirection(Vector2 moveInput)
@@ -107,23 +159,40 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && touchingDirections.IsGrounded)
+        // TODO: Check if alive as well
+        if (context.started && touchingDirections.IsGrounded && CanMove)
         {
-            animator.SetTrigger(AnimationStrings.jump);
+            animator.SetTrigger(AnimationStrings.jumpTrigger);
             rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
+        }
+    }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            animator.SetTrigger(AnimationStrings.attackTrigger);
         }
     }
 
     // Play or stop footstep sound based on movement and grounded status
     private void HandleFootsteps()
     {
-        if (IsMoving && touchingDirections.IsGrounded && !footstepAudio.isPlaying)
+        if (IsMoving && touchingDirections.IsGrounded)
         {
-            footstepAudio.Play();  // Play footstep sound
+            if (!footstepAudio.isPlaying)
+            {
+                footstepAudio.Play();
+            }
+            // Adjust pitch based on movement speed
+            footstepAudio.pitch = IsRunning ? runPitch : walkPitch;
         }
-        else if ((!IsMoving || !touchingDirections.IsGrounded) && footstepAudio.isPlaying)
+        else
         {
-            footstepAudio.Stop();  // Stop footstep sound
+            if (footstepAudio.isPlaying)
+            {
+                footstepAudio.Stop();
+            }
         }
     }
 }
