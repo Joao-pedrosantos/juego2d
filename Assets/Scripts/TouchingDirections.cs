@@ -9,6 +9,9 @@ public class TouchingDirections : MonoBehaviour
     public float wallDistance = 0.2f;
     public float ceilingDistance = 0.05f;
 
+    public bool WasGroundedLastFrame { get; private set; }
+
+
     CapsuleCollider2D touchingCol;
     Animator animator;
 
@@ -64,8 +67,13 @@ public class TouchingDirections : MonoBehaviour
 
     void FixedUpdate()
     {
+        // Store the current grounded state before updating it
+        WasGroundedLastFrame = IsGrounded;
+
+        // Perform checks to update the current state
         IsGrounded = touchingCol.Cast(Vector2.down, castFilter, groundHits, groundDistance) > 0;
         IsOnWall = touchingCol.Cast(wallCheckDirection, castFilter, wallHits, wallDistance) > 0;
         IsOnCeiling = touchingCol.Cast(Vector2.up, castFilter, ceilingHits, ceilingDistance) > 0;
     }
+
 }

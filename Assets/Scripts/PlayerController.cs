@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections))]
+[RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections), typeof(Damageable))]
 public class PlayerController : MonoBehaviour
 {
     public float walkSpeed = 5f;
     public float runSpeed = 8f;
     public float jumpImpulse = 8f;
     public float airWalkSpeed = 3f;
+    private bool wasRunningAtJump;
+    private bool runInputWhileAirborne;
+
+
     Vector2 moveInput;
     TouchingDirections touchingDirections;
+    Damageable damageable;
 
     public AudioSource footstepAudio;  // Reference to the AudioSource for footstep sounds
     public float walkPitch = 0.8f;  // Normal pitch for walking
@@ -38,7 +43,7 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
-                        return airWalkSpeed;
+                        return wasRunningAtJump ? runSpeed : airWalkSpeed;
                     }
                 }
                 else
@@ -52,6 +57,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
 
     [SerializeField]
     private bool _isMoving = false;
@@ -109,6 +115,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public bool IsAlive { get
+        {
+            return animator.GetBool(AnimationStrings.isAlive);
+        }
+    }
+
     Rigidbody2D rb;
     Animator animator;
 
@@ -117,33 +129,62 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         touchingDirections = GetComponent<TouchingDirections>();
+        damageable = GetComponent<Damageable>();
     }
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
+        if (!damageable.LockVelocity)
+            rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+
         HandleFootsteps();
+
+        // Check for landing
+        if (!touchingDirections.WasGroundedLastFrame && touchingDirections.IsGrounded)
+        {
+            // Update running state based on whether the run input was active while airborne
+            IsRunning = runInputWhileAirborne;
+        }
     }
+
 
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
-        IsMoving = moveInput != Vector2.zero;
-        SetFacingDirection(moveInput);
+
+        if (IsAlive)
+        {
+            IsMoving = moveInput != Vector2.zero;
+            SetFacingDirection(moveInput);
+        }
+        else
+        {
+            IsMoving = false;
+        }
     }
 
     public void OnRun(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            IsRunning = true;
+            runInputWhileAirborne = true;
+            if (touchingDirections.IsGrounded)
+            {
+                IsRunning = true;
+            }
         }
         else if (context.canceled)
         {
-            IsRunning = false;
+            runInputWhileAirborne = false;
+            if (touchingDirections.IsGrounded)
+            {
+                IsRunning = false;
+            }
         }
     }
+
+
 
     private void SetFacingDirection(Vector2 moveInput)
     {
@@ -159,11 +200,11 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        // TODO: Check if alive as well
         if (context.started && touchingDirections.IsGrounded && CanMove)
         {
             animator.SetTrigger(AnimationStrings.jumpTrigger);
             rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
+            wasRunningAtJump = IsRunning;
         }
     }
 
@@ -173,6 +214,11 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetTrigger(AnimationStrings.attackTrigger);
         }
+    }
+
+    public void OnHit(int damage, Vector2 knockback)
+    {
+        rb.velocity = new Vector2(knockback.x, rb.velocity.y + knockback.y);
     }
 
     // Play or stop footstep sound based on movement and grounded status

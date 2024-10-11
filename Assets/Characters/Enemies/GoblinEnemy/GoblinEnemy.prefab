@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 269013139210280868}
   - component: {fileID: 8703964232658490098}
   - component: {fileID: 1926738375152637667}
+  - component: {fileID: 8203203894642908606}
   m_Layer: 8
   m_Name: GoblinEnemy
   m_TagString: Untagged
@@ -222,6 +223,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8203203894642908606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831144693294777561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbdd537b511277842afecd385384425d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageableHit:
+    m_PersistentCalls:
+      m_Calls: []
+  _maxHealth: 100
+  _health: 100
+  isInvincible: 0
+  invincibleTime: 0.25
 --- !u!1 &2485579254324780242
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,7 +252,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3064145596122449065}
   - component: {fileID: 5060200532992011686}
-  m_Layer: 8
+  - component: {fileID: 4142092223179157983}
+  m_Layer: 10
   m_Name: SwordAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +269,7 @@ Transform:
   m_GameObject: {fileID: 2485579254324780242}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -298,17 +319,31 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 1.8852696, y: -0.19117403}
-      - {x: 0.037483573, y: 0.13786745}
-      - {x: -1.6389326, y: 1.0860028}
-      - {x: -2.0140715, y: 1.7810993}
-      - {x: -2.6573586, y: 1.7632451}
-      - {x: -2.787775, y: 1.0961826}
-      - {x: -0.13797635, y: -0.4341768}
-      - {x: 2.0156496, y: -0.803473}
-      - {x: 2.7431169, y: -0.47166085}
-      - {x: 2.2255135, y: 0.2340483}
+    - - {x: 1.6086884, y: -0.12289715}
+      - {x: 1.1806221, y: 0.28736734}
+      - {x: 0.6193752, y: -0.18392229}
+      - {x: -0.36067963, y: -0.03746414}
+      - {x: -1.8246078, y: 0.53091717}
+      - {x: -2.4705515, y: 0.26091984}
+      - {x: -1.1723037, y: -0.40908659}
+      - {x: 0.122276306, y: -0.84192944}
+      - {x: 1.029571, y: -0.8717096}
+      - {x: 1.6192808, y: -0.5875903}
   m_UseDelaunayMesh: 0
+--- !u!114 &4142092223179157983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2485579254324780242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45895688db417bd4cb95cba59c31a4ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackDamage: 10
+  knockback: {x: 5, y: 2}
 --- !u!1 &2572476115094492529
 GameObject:
   m_ObjectHideFlags: 0
