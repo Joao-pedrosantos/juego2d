@@ -11,4 +11,9 @@ public class MenuScript : MonoBehaviour
         // Load the game scene, assuming the name of the game scene is "GameScene"
         SceneManager.LoadScene("GameScene");
     }
+
+    public void Settings(){
+
+        SceneManager.LoadScene("Settings");
+    }
 }
