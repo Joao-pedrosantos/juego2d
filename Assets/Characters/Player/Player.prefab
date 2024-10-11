@@ -109,7 +109,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 961e327ccc932764681cb51c2c06c73b, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -134,7 +134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 5
   runSpeed: 8
-  jumpImpulse: 8
+  jumpImpulse: 10
   airWalkSpeed: 3
   footstepAudio: {fileID: 7344850565235610625}
   walkPitch: 0.8
