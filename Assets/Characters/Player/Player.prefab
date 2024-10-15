@@ -134,8 +134,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 5
   runSpeed: 8
-  jumpImpulse: 10
+  jumpImpulse: 9
   airWalkSpeed: 3
+  slopeCheckDistance: 0.5
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 64
+  groundCheck: {fileID: 0}
   footstepAudio: {fileID: 7344850565235610625}
   walkPitch: 0.8
   runPitch: 1.2
