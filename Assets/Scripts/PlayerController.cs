@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public float runSpeed = 8f;
     public float jumpImpulse = 8f;
     public float airWalkSpeed = 3f;
+    public float maxVerticalSpeed = 10f;  // New field to limit vertical speed
     private bool wasRunningAtJump;
     private bool runInputWhileAirborne;
     private Vector2 moveInput;
@@ -101,15 +102,19 @@ public class PlayerController : MonoBehaviour
             Vector2 adjustedMovement = CalculateSlopeMovement();
             float targetYVelocity = AdjustVerticalMovementForSlope();
 
-            // Snap the player to the ground if needed
-            SnapToGround(ref targetYVelocity);
+            // Smoothly snap the player to the ground if needed
+            SmoothSnapToGround(ref targetYVelocity);
+
+            // Clamp the vertical velocity to prevent excessive speed in air
+            targetYVelocity = Mathf.Clamp(targetYVelocity, -maxVerticalSpeed, maxVerticalSpeed);
 
             // Apply the adjusted velocity
             rb.velocity = new Vector2(adjustedMovement.x, targetYVelocity);
         }
         else
         {
-            rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
+            // Regular air movement with vertical velocity clamped
+            rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, Mathf.Clamp(rb.velocity.y, -maxVerticalSpeed, maxVerticalSpeed));
         }
     }
 
@@ -127,8 +132,8 @@ public class PlayerController : MonoBehaviour
         float targetYVelocity = rb.velocity.y;
         if (touchingDirections.slopeAngle < 5f)
         {
-            targetYVelocity = Mathf.Lerp(rb.velocity.y, 0, 0.0001f);
-            rb.AddForce(Vector2.down * 15f, ForceMode2D.Force);
+            targetYVelocity = Mathf.Lerp(rb.velocity.y, 0, 0.1f);
+            rb.AddForce(Vector2.down * 20f, ForceMode2D.Force);
 
             RaycastHit2D groundHit = Physics2D.Raycast(transform.position, Vector2.down, 0.5f, touchingDirections.castFilter.layerMask);
             if (groundHit.collider != null && rb.velocity.y > 0)
@@ -139,15 +144,24 @@ public class PlayerController : MonoBehaviour
         return targetYVelocity;
     }
 
-    // Snaps the player to the ground if they are very close to it
-    private void SnapToGround(ref float targetYVelocity)
+    // Smoothly snaps the player to the ground if they are very close to it
+    private void SmoothSnapToGround(ref float targetYVelocity)
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f, touchingDirections.castFilter.layerMask);
         if (hit.collider != null && rb.velocity.y <= 0)
         {
             float distanceToGround = hit.distance;
-            if (distanceToGround > 0.5f)
+
+            // Use smooth transition if very close to the ground to avoid bouncing
+            if (distanceToGround > 0.01f && distanceToGround < 0.5f)
             {
+                float snapSpeed = Mathf.Clamp(distanceToGround * 10f, 0f, 10f); // Adjust speed based on distance
+                rb.velocity = new Vector2(rb.velocity.x, -snapSpeed);
+                targetYVelocity = Mathf.Lerp(targetYVelocity, 0, 0.1f); // Smooth out vertical velocity
+            }
+            else if (distanceToGround >= 0.5f)
+            {
+                // Hard snap when far from the ground
                 transform.position = new Vector3(transform.position.x, transform.position.y - distanceToGround, transform.position.z);
                 targetYVelocity = 0;
             }
