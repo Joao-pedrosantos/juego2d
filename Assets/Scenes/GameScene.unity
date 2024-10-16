@@ -8599,8 +8599,8 @@ Tilemap:
   - first: {x: 24, y: -4, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 15
-      m_TileSpriteIndex: 15
+      m_TileIndex: 19
+      m_TileSpriteIndex: 19
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -8609,8 +8609,8 @@ Tilemap:
   - first: {x: 25, y: -4, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 19
-      m_TileSpriteIndex: 19
+      m_TileIndex: 15
+      m_TileSpriteIndex: 15
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -10219,8 +10219,8 @@ Tilemap:
   - first: {x: 24, y: -3, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 13
-      m_TileSpriteIndex: 13
+      m_TileIndex: 14
+      m_TileSpriteIndex: 14
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -10229,8 +10229,8 @@ Tilemap:
   - first: {x: 25, y: -3, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 14
-      m_TileSpriteIndex: 14
+      m_TileIndex: 13
+      m_TileSpriteIndex: 13
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -11839,8 +11839,8 @@ Tilemap:
   - first: {x: 24, y: -2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 11
-      m_TileSpriteIndex: 11
+      m_TileIndex: 12
+      m_TileSpriteIndex: 12
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -11849,8 +11849,8 @@ Tilemap:
   - first: {x: 25, y: -2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 12
-      m_TileSpriteIndex: 12
+      m_TileIndex: 11
+      m_TileSpriteIndex: 11
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -13459,8 +13459,8 @@ Tilemap:
   - first: {x: 24, y: -1, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 9
-      m_TileSpriteIndex: 9
+      m_TileIndex: 10
+      m_TileSpriteIndex: 10
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -13469,8 +13469,8 @@ Tilemap:
   - first: {x: 25, y: -1, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 10
-      m_TileSpriteIndex: 10
+      m_TileIndex: 9
+      m_TileSpriteIndex: 9
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -20313,18 +20313,18 @@ CompositeCollider2D:
         Y: -38750000
       - X: 240000000
         Y: -37812500
-      - X: 241250000
-        Y: -39062500
-      - X: 245937504
-        Y: -39375000
-      - X: 249062496
-        Y: -39375000
+      - X: 240624992
+        Y: -38750000
       - X: 250000000
         Y: -38750000
       - X: 250000000
         Y: -37812500
-      - X: 250624992
-        Y: -38750000
+      - X: 251250000
+        Y: -39062500
+      - X: 255937504
+        Y: -39375000
+      - X: 259062496
+        Y: -39375000
       - X: 260000000
         Y: -38750000
       - X: 260000000
@@ -21717,14 +21717,14 @@ CompositeCollider2D:
       - {x: 23.00007, y: -3.7813563}
       - {x: 23.062513, y: -3.875}
       - {x: 24, y: -3.874971}
-      - {x: 24.000063, y: -3.781312}
-      - {x: 24.12501, y: -3.9062505}
-      - {x: 24.593752, y: -3.9375}
-      - {x: 24.906256, y: -3.9374957}
-      - {x: 25, y: -3.8749857}
-      - {x: 25.00007, y: -3.7813563}
-      - {x: 25.062513, y: -3.875}
-      - {x: 26, y: -3.874971}
+      - {x: 24.00007, y: -3.7813563}
+      - {x: 24.062513, y: -3.875}
+      - {x: 25, y: -3.874971}
+      - {x: 25.000063, y: -3.781312}
+      - {x: 25.12501, y: -3.9062505}
+      - {x: 25.593752, y: -3.9375}
+      - {x: 25.906256, y: -3.9374957}
+      - {x: 26, y: -3.8749857}
       - {x: 26.000063, y: -3.781312}
       - {x: 26.12501, y: -3.9062505}
       - {x: 26.593752, y: -3.9375}
@@ -23159,10 +23159,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2508371939240735467, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
-      propertyPath: groundCheck
-      value: 
-      objectReference: {fileID: 1394237662}
     - target: {fileID: 4085423343134897345, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
       propertyPath: m_Name
       value: Player
