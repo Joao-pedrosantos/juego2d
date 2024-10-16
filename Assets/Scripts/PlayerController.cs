@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public bool CanMove => animator.GetBool(AnimationStrings.canMove);
+    public bool CanMove => animator.GetBool(AnimationStrings.canMove) && PauseMenuScript.isPaused == false;
     public bool IsAlive => animator.GetBool(AnimationStrings.isAlive);
 
     public float CurrentMoveSpeed => (CanMove && IsMoving && !touchingDirections.IsOnWall)
@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour
     {
         moveInput = context.ReadValue<Vector2>();
 
-        if (IsAlive)
+        if (IsAlive && PauseMenuScript.isPaused == false)
         {
             IsMoving = moveInput != Vector2.zero;
             SetFacingDirection(moveInput);
@@ -242,7 +242,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && CanMove)
         {
             animator.SetTrigger(AnimationStrings.attackTrigger);
         }
