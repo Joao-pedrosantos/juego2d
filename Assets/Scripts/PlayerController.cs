@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections), typeof(Damageable))]
 public class PlayerController : MonoBehaviour
@@ -31,6 +32,14 @@ public class PlayerController : MonoBehaviour
     private bool _isMoving;
     private bool _isRunning;
     private bool _isFacingRight = true;
+
+    // Game over flags
+    public GameObject GameOverPanel;
+ 
+    public float gameOverHeight = -15f; // Defina a altura para game over
+
+    // You Win flags
+    public GameObject VictoryPanel;
 
     // Properties
     public bool IsMoving
@@ -92,6 +101,25 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
         HandleFootsteps();
         HandleLanding();
+
+        if (transform.position.y <= gameOverHeight)
+        {
+            animator.SetBool(AnimationStrings.isAlive, false);
+        }
+
+        // Se o player passar de um determinado x, ele ganha o jogo
+        if (transform.position.x >= 150)
+        {
+            Victory();
+        }
+    }
+
+    private void Update()
+    {
+        if (!IsAlive)
+        {
+            GameOver();
+        }
     }
 
     // Handles the main movement logic
@@ -265,4 +293,25 @@ public class PlayerController : MonoBehaviour
             IsFacingRight = false;
         }
     }
+
+    public void Respawn()
+    {
+        transform.position = new Vector3(0, 0, 0);
+        animator.SetBool(AnimationStrings.isAlive, true);
+        GameOverPanel.SetActive(false);
+        
+    }
+
+    public void GameOver()
+    {
+        animator.SetBool(AnimationStrings.isAlive, false);
+        GameOverPanel.SetActive(true);
+    }
+
+    public void Victory()
+    {
+        VictoryPanel.SetActive(true);
+        Time.timeScale = 0f;
+    }
 }
+

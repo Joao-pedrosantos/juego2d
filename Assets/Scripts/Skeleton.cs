@@ -123,6 +123,8 @@ public class Skeleton : MonoBehaviour
         {
             WalkDirection = WalkableDirection.Left;
         }
+
+        rb.velocity = new Vector2(walkSpeed * walkDirectionVector.x, rb.velocity.y);
     }
 
     private void FlipDirection()
