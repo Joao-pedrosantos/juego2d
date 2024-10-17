@@ -108,6 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeTime: 2
+  fadeDelay: 0
 --- !u!1102 &-4704342414710692694
 AnimatorState:
   serializedVersion: 6
@@ -438,7 +439,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -2555650500301221677}
-    m_Position: {x: 270, y: -40, z: 0}
+    m_Position: {x: 490, y: 30, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8905519968548417245}
     m_Position: {x: 230, y: 240, z: 0}
