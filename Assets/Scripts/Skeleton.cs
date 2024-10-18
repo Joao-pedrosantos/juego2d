@@ -15,6 +15,9 @@ public class Skeleton : MonoBehaviour
     TouchingDirections touchingDirections;
     Animator animator;
     Damageable damageable;
+    AudioSource audioSource;
+
+    public AudioClip[] skeletonSounds;  // Array for storing 6 sound clips
 
     public enum WalkableDirection { Right, Left }
 
@@ -84,6 +87,7 @@ public class Skeleton : MonoBehaviour
         touchingDirections = GetComponent<TouchingDirections>();
         animator = GetComponent<Animator>();
         damageable = GetComponent<Damageable>();
+        audioSource = GetComponent<AudioSource>();  // Initialize the AudioSource
     }
 
     // Update is called once per frame
@@ -107,7 +111,10 @@ public class Skeleton : MonoBehaviour
         if (!damageable.LockVelocity)
         {
             if (CanMove)
+            {
                 FollowPlayer();
+                PlayRandomSound();
+            }
             else
                 rb.velocity = new Vector2(Mathf.Lerp(rb.velocity.x, 0, walkStopRate), rb.velocity.y);
         }
@@ -153,6 +160,16 @@ public class Skeleton : MonoBehaviour
         if (touchingDirections.IsGrounded)
         {
             FlipDirection();
+        }
+    }
+
+    private void PlayRandomSound()
+    {
+        if (!audioSource.isPlaying && skeletonSounds.Length > 0)
+        {
+            int randomIndex = Random.Range(0, skeletonSounds.Length);
+            audioSource.clip = skeletonSounds[randomIndex];
+            audioSource.Play();
         }
     }
 }

@@ -11,13 +11,21 @@ public class PlayerController : MonoBehaviour
     public float runSpeed = 8f;
     public float jumpImpulse = 8f;
     public float airWalkSpeed = 3f;
-    public float maxVerticalSpeed = 10f;  // New field to limit vertical speed
+    public float maxVerticalSpeed = 10f;
     private bool wasRunningAtJump;
     private bool runInputWhileAirborne;
     private Vector2 moveInput;
 
     // Audio-related fields
-    public AudioSource footstepAudio;
+    public AudioSource footstepAudio;   // For footstep sounds
+    public AudioSource attackAudio;     // Separate AudioSource for attack sound
+    public AudioSource jumpAudio;       // Separate AudioSource for jump sound
+    public AudioClip attackClip;        // The attack sound clip
+    public AudioClip jumpClip;          // The jump sound clip
+
+    public AudioSource hitAudio;   // Separate AudioSource for hit sound
+    public AudioClip hitClip;      // The hit sound clip
+
     public float walkPitch = 0.8f;
     public float runPitch = 1.3f;
 
@@ -35,7 +43,6 @@ public class PlayerController : MonoBehaviour
 
     // Game over flags
     public GameObject GameOverPanel;
- 
     public float gameOverHeight = -15f; // Defina a altura para game over
 
     // You Win flags
@@ -107,7 +114,6 @@ public class PlayerController : MonoBehaviour
             animator.SetBool(AnimationStrings.isAlive, false);
         }
 
-        // Se o player passar de um determinado x, ele ganha o jogo
         if (transform.position.x >= 150)
         {
             Victory();
@@ -130,23 +136,18 @@ public class PlayerController : MonoBehaviour
             Vector2 adjustedMovement = CalculateSlopeMovement();
             float targetYVelocity = AdjustVerticalMovementForSlope();
 
-            // Smoothly snap the player to the ground if needed
             SmoothSnapToGround(ref targetYVelocity);
 
-            // Clamp the vertical velocity to prevent excessive speed in air
             targetYVelocity = Mathf.Clamp(targetYVelocity, -maxVerticalSpeed, maxVerticalSpeed);
 
-            // Apply the adjusted velocity
             rb.velocity = new Vector2(adjustedMovement.x, targetYVelocity);
         }
         else
         {
-            // Regular air movement with vertical velocity clamped
             rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, Mathf.Clamp(rb.velocity.y, -maxVerticalSpeed, maxVerticalSpeed));
         }
     }
 
-    // Calculate player movement along the slope
     private Vector2 CalculateSlopeMovement()
     {
         Vector2 slopeNormal = touchingDirections.slopeNormal.normalized;
@@ -154,7 +155,6 @@ public class PlayerController : MonoBehaviour
         return slopeParallel * moveInput.x * CurrentMoveSpeed;
     }
 
-    // Adjust vertical velocity when transitioning from a slope to flat ground
     private float AdjustVerticalMovementForSlope()
     {
         float targetYVelocity = rb.velocity.y;
@@ -172,7 +172,6 @@ public class PlayerController : MonoBehaviour
         return targetYVelocity;
     }
 
-    // Smoothly snaps the player to the ground if they are very close to it
     private void SmoothSnapToGround(ref float targetYVelocity)
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f, touchingDirections.castFilter.layerMask);
@@ -180,23 +179,20 @@ public class PlayerController : MonoBehaviour
         {
             float distanceToGround = hit.distance;
 
-            // Use smooth transition if very close to the ground to avoid bouncing
             if (distanceToGround > 0.01f && distanceToGround < 0.5f)
             {
-                float snapSpeed = Mathf.Clamp(distanceToGround * 10f, 0f, 10f); // Adjust speed based on distance
+                float snapSpeed = Mathf.Clamp(distanceToGround * 10f, 0f, 10f);
                 rb.velocity = new Vector2(rb.velocity.x, -snapSpeed);
-                targetYVelocity = Mathf.Lerp(targetYVelocity, 0, 0.1f); // Smooth out vertical velocity
+                targetYVelocity = Mathf.Lerp(targetYVelocity, 0, 0.1f);
             }
             else if (distanceToGround >= 0.5f)
             {
-                // Hard snap when far from the ground
                 transform.position = new Vector3(transform.position.x, transform.position.y - distanceToGround, transform.position.z);
                 targetYVelocity = 0;
             }
         }
     }
 
-    // Handles the player landing after jumping or falling
     private void HandleLanding()
     {
         if (!touchingDirections.WasGroundedLastFrame && touchingDirections.IsGrounded)
@@ -205,7 +201,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Play or stop footstep sound based on movement and grounded status
     private void HandleFootsteps()
     {
         if (IsMoving && touchingDirections.IsGrounded)
@@ -265,6 +260,12 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger(AnimationStrings.jumpTrigger);
             rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
             wasRunningAtJump = IsRunning;
+
+            // Play jump sound
+            if (jumpAudio != null && jumpClip != null)
+            {
+                jumpAudio.PlayOneShot(jumpClip);
+            }
         }
     }
 
@@ -273,15 +274,28 @@ public class PlayerController : MonoBehaviour
         if (context.started && CanMove)
         {
             animator.SetTrigger(AnimationStrings.attackTrigger);
+
+            // Play attack sound
+            if (attackAudio != null && attackClip != null)
+            {
+                attackAudio.PlayOneShot(attackClip);  // Play attack sound without interrupting other sounds
+            }
         }
     }
 
-    public void OnHit(int damage, Vector2 knockback)
+public void OnHit(int damage, Vector2 knockback)
+{
+    // Apply knockback to the player
+    rb.velocity = new Vector2(knockback.x, rb.velocity.y + knockback.y);
+    
+    // Play the hit sound
+    if (hitAudio != null && hitClip != null)
     {
-        rb.velocity = new Vector2(knockback.x, rb.velocity.y + knockback.y);
+        hitAudio.PlayOneShot(hitClip); // Play hit sound without interrupting other sounds
     }
+}
 
-    // Set the player's facing direction based on movement input
+
     private void SetFacingDirection(Vector2 moveInput)
     {
         if (moveInput.x > 0 && !IsFacingRight)
@@ -312,4 +326,3 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = 0f;
     }
 }
-
