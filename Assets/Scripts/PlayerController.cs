@@ -296,10 +296,8 @@ public class PlayerController : MonoBehaviour
 
     public void Respawn()
     {
-        transform.position = new Vector3(0, 0, 0);
-        animator.SetBool(AnimationStrings.isAlive, true);
         GameOverPanel.SetActive(false);
-        
+        SceneManager.LoadScene("GameScene");
     }
 
     public void GameOver()
