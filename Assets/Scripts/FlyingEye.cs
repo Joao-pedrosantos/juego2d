@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource), typeof(Renderer))]
 public class FlyingEye : MonoBehaviour
 {
     public float flightSpeed = 5f;
@@ -9,15 +10,14 @@ public class FlyingEye : MonoBehaviour
     public DetectionZone biteDetectionZone;
     public Collider2D deathCollider;
     public List<Transform> waypoints;
-    public AudioSource flightAudioSource; // Audio source for the movement sound
-    public AudioClip flightClip; // Flight sound clip
-    public float fadeDuration = 1f; // Duration for fading in and out
-    public int maxHP = 100; // Enemy's max health
-    private int currentHP; // Enemy's current health
 
     Animator animator;
     Rigidbody2D rb;
     Damageable damageable;
+    AudioSource audioSource;  // AudioSource for playing sounds
+    Renderer flyingEyeRenderer;  // Renderer for visibility checking
+
+    public AudioClip[] flyingEyeSounds;  // Array of sound clips
 
     Transform nextWaypoint;
     int waypointNum = 0;
@@ -47,19 +47,8 @@ public class FlyingEye : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         damageable = GetComponent<Damageable>();
-
-        // Initialize HP
-        currentHP = maxHP;
-
-        // Set up the AudioSource component
-        flightAudioSource = GetComponent<AudioSource>();
-        if (flightAudioSource != null && flightClip != null)
-        {
-            flightAudioSource.clip = flightClip;
-            flightAudioSource.loop = true; // Loop the sound during flight
-            flightAudioSource.volume = 0f; // Start with volume 0 for fade-in
-            flightAudioSource.Play(); // Ensure the sound is playing
-        }
+        audioSource = GetComponent<AudioSource>();  // Initialize the AudioSource
+        flyingEyeRenderer = GetComponent<Renderer>();  // Initialize the Renderer
     }
 
     private void Start()
@@ -72,6 +61,7 @@ public class FlyingEye : MonoBehaviour
         damageable.damageableDeath.AddListener(OnDeath);
     }
 
+    // Update is called once per frame
     void Update()
     {
         HasTarget = biteDetectionZone.detectedColliders.Count > 0;
@@ -79,11 +69,12 @@ public class FlyingEye : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (damageable.IsAlive && currentHP > 0)
+        if (damageable.IsAlive)
         {
             if (CanMove)
             {
                 Flight();
+                PlayRandomSound();  // Play sound when moving and visible
             }
             else
             {
@@ -95,8 +86,10 @@ public class FlyingEye : MonoBehaviour
     private void Flight()
     {
         Vector2 directionToWaypoint = (nextWaypoint.position - transform.position).normalized;
+
         float distance = Vector2.Distance(nextWaypoint.position, transform.position);
 
+        // Skip waypoint if it's too far away
         if (distance > 15f)
         {
             waypointNum++;
@@ -105,19 +98,21 @@ public class FlyingEye : MonoBehaviour
                 waypointNum = 0;
             }
 
-            nextWaypoint = waypoints[waypointNum];
-            distance = Vector2.Distance(nextWaypoint.position, transform.position);
+            nextWaypoint = waypoints[waypointNum]; // Update to the new waypoint
+            distance = Vector2.Distance(nextWaypoint.position, transform.position); // Recalculate distance
         }
 
+        // Move towards the next waypoint
         directionToWaypoint = (nextWaypoint.position - transform.position).normalized;
         rb.velocity = directionToWaypoint * flightSpeed;
 
         UpdateDirection();
 
+        // Check if we reached the waypoint or if it attacked the player (HasTarget is true)
         if (distance <= waypointReachedDistance || HasTarget)
         {
             waypointNum++;
-            if (waypointNum >= waypoints.Count)
+            if (waypointNum >= waypoints.Count) 
             {
                 waypointNum = 0;
             }
@@ -146,95 +141,21 @@ public class FlyingEye : MonoBehaviour
         }
     }
 
-    // Method to take damage and reduce HP
-    public void TakeDamage(int damage)
-    {
-        currentHP -= damage;
-
-        // Check if NPC is dead
-        if (currentHP <= 0)
-        {
-            OnDeath();
-        }
-    }
-
     public void OnDeath()
     {
         rb.gravityScale = 1f;
         rb.velocity = new Vector2(0, rb.velocity.y);
         deathCollider.enabled = true;
-
-        // Instead of stopping the sound immediately, fade it out
-        StartCoroutine(FadeOutAndStopSound());
     }
 
-    // Triggered when the NPC enters the camera's view
-    private void OnBecameVisible()
+    private void PlayRandomSound()
     {
-        StartCoroutine(FadeInSound());
-    }
-
-    // Triggered when the NPC leaves the camera's view
-    private void OnBecameInvisible()
-    {
-        StartCoroutine(FadeOutSound());
-    }
-
-    // Coroutine to fade in the sound
-    private IEnumerator FadeInSound()
-    {
-        float startVolume = flightAudioSource.volume;
-        float time = 0;
-
-        // Ensure sound is playing
-        if (!flightAudioSource.isPlaying)
+        // Check if the object is visible and AudioSource is not currently playing
+        if (flyingEyeRenderer.isVisible && !audioSource.isPlaying && flyingEyeSounds.Length > 0)
         {
-            flightAudioSource.Play();
+            int randomIndex = Random.Range(0, flyingEyeSounds.Length);  // Choose a random sound
+            audioSource.clip = flyingEyeSounds[randomIndex];  // Set the clip to play
+            audioSource.Play();  // Play the selected sound
         }
-
-        // Gradually increase the volume
-        while (time < fadeDuration)
-        {
-            time += Time.deltaTime;
-            flightAudioSource.volume = Mathf.Lerp(startVolume, 1f, time / fadeDuration);
-            yield return null;
-        }
-
-        flightAudioSource.volume = 1f; // Ensure it's fully at max volume
-    }
-
-    // Coroutine to fade out the sound
-    private IEnumerator FadeOutSound()
-    {
-        float startVolume = flightAudioSource.volume;
-        float time = 0;
-
-        // Gradually decrease the volume
-        while (time < fadeDuration)
-        {
-            time += Time.deltaTime;
-            flightAudioSource.volume = Mathf.Lerp(startVolume, 0f, time / fadeDuration);
-            yield return null;
-        }
-
-        flightAudioSource.volume = 0f; // Ensure it's fully muted
-    }
-
-    // Coroutine to fade out and stop the sound on death
-    private IEnumerator FadeOutAndStopSound()
-    {
-        float startVolume = flightAudioSource.volume;
-        float time = 0;
-
-        // Gradually decrease the volume
-        while (time < fadeDuration)
-        {
-            time += Time.deltaTime;
-            flightAudioSource.volume = Mathf.Lerp(startVolume, 0f, time / fadeDuration);
-            yield return null;
-        }
-
-        flightAudioSource.volume = 0f; // Ensure it's fully muted
-        flightAudioSource.Stop(); // Stop playing after fade-out
     }
 }
