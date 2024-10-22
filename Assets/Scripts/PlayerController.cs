@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
 
     // You Win flags
     public GameObject VictoryPanel;
+    public float victoryThreshold = 150f; // Defina a posição para vitória
 
     // Properties
     public bool IsMoving
@@ -114,7 +115,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool(AnimationStrings.isAlive, false);
         }
 
-        if (transform.position.x >= 150)
+        if (transform.position.x >= victoryThreshold)
         {
             Victory();
         }
