@@ -61,7 +61,7 @@ public class Skeleton : MonoBehaviour
     {
         get
         {
-            if (Vector2.Distance(player.position, transform.position) < 10)
+            if (Vector2.Distance(player.position, transform.position) < 10 && damageable.IsAlive)
             {
                 animator.SetBool(AnimationStrings.canMove, true);
                 return animator.GetBool(AnimationStrings.canMove);
