@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public float runSpeed = 8f;
     public float jumpImpulse = 8f;
     public float airWalkSpeed = 3f;
+    public float airRunSpeed = 6f;
     public float maxVerticalSpeed = 10f;
     private bool wasRunningAtJump;
     private bool runInputWhileAirborne;
@@ -87,7 +88,7 @@ public class PlayerController : MonoBehaviour
     public bool IsAlive => animator.GetBool(AnimationStrings.isAlive);
 
     public float CurrentMoveSpeed => (CanMove && IsMoving && !touchingDirections.IsOnWall)
-        ? (touchingDirections.IsGrounded ? (IsRunning ? runSpeed : walkSpeed) : (wasRunningAtJump ? runSpeed : airWalkSpeed))
+        ? (touchingDirections.IsGrounded ? (IsRunning ? runSpeed : walkSpeed) : (wasRunningAtJump ? airRunSpeed : airWalkSpeed))
         : 0;
 
     private void Awake()

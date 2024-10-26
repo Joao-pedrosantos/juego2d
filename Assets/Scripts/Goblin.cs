@@ -17,8 +17,9 @@ public class Goblin : MonoBehaviour
     public float minRandomSoundInterval = 1f; // Minimum interval to play sound
     public float maxRandomSoundInterval = 5f; // Maximum interval to play sound
     private float nextSoundTime = 0f; // Timer for next sound
-
     public Transform playerTransform;  // Reference to the player's transform
+    private Damageable playerDamageable; // Reference to the player's Damageable component
+
     public float soundDistanceThreshold = 5f;  // Distance within which the goblin will play sound
 
     Rigidbody2D rb;
@@ -94,13 +95,20 @@ public class Goblin : MonoBehaviour
             Debug.LogError("No AudioSource found on the Goblin!");
         }
 
+        // Get the player's Damageable component if the playerTransform is assigned
+        if (playerTransform != null)
+        {
+            playerDamageable = playerTransform.GetComponent<Damageable>();
+        }
+
         SetNextSoundTime(); // Set the initial random time
     }
+
 
     // Update is called once per frame
     void Update()
     {
-        HasTarget = attackZone.detectedColliders.Count > 0;
+        HasTarget = attackZone.detectedColliders.Count > 0 && IsPlayerAlive();
 
         if (AttackCooldown > 0)
         {
@@ -114,6 +122,7 @@ public class Goblin : MonoBehaviour
             SetNextSoundTime(); // Reset the timer for the next random sound
         }
     }
+
 
     private void FixedUpdate()
     {
@@ -190,5 +199,10 @@ public class Goblin : MonoBehaviour
 
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
         return distanceToPlayer <= soundDistanceThreshold;  // Check if the player is within range
+    }
+
+    private bool IsPlayerAlive()
+    {
+        return playerDamageable != null && playerDamageable.IsAlive;
     }
 }
