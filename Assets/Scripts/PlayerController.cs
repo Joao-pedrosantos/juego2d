@@ -17,6 +17,11 @@ public class PlayerController : MonoBehaviour
     private bool runInputWhileAirborne;
     private Vector2 moveInput;
 
+    private float idleTime = 0f;
+    private float idleThreshold = 0.3f;
+    private float idleAcceleration = -2f;
+
+
     // Audio-related fields
     public AudioSource footstepAudio;   // For footstep sounds
     public AudioSource attackAudio;     // Separate AudioSource for attack sound
@@ -111,6 +116,8 @@ public class PlayerController : MonoBehaviour
         HandleFootsteps();
         HandleLanding();
 
+        WindEffect(); // Se quiser tirar é so comentar essa funcao
+
         if (transform.position.y <= gameOverHeight)
         {
             animator.SetBool(AnimationStrings.isAlive, false);
@@ -122,13 +129,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Update()
+
+    private void WindEffect()
     {
-        if (!IsAlive)
+        if (SceneManager.GetActiveScene().name == "2GameScene")
         {
-            GameOver();
+            if (!IsMoving)
+            {
+                idleTime += Time.deltaTime;
+                if (idleTime >= idleThreshold)
+                {
+                    rb.velocity = new Vector2(idleAcceleration, rb.velocity.y);
+                }
+            }
+            else
+            {
+                idleTime = 0f;
+            }
         }
     }
+
+ 
 
     // Handles the main movement logic
     private void HandleMovement()

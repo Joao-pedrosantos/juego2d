@@ -1129,8 +1129,8 @@ Transform:
   m_GameObject: {fileID: 446274510}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 13.51, y: 20, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 7.25, y: 20, z: 0}
+  m_LocalScale: {x: 1.05, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 293706353}
@@ -115796,6 +115796,22 @@ PrefabInstance:
     - target: {fileID: 6787775971522175923, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
       propertyPath: m_SortingOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7967329333407021987, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
+      propertyPath: prewarm
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7967329333407021987, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
+      propertyPath: VelocityModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7967329333407021987, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
+      propertyPath: VelocityModule.x.scalar
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7967329333407021987, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
