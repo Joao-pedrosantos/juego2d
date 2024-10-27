@@ -56,7 +56,7 @@ public class PersistentAudio : MonoBehaviour
             }
         }
         // If the scene is 2 (First Level), play the level music
-        else if (sceneIndex == 2)
+        else if (sceneIndex == 2 || sceneIndex == 3 || sceneIndex == 4) 
         {
             if (audioSource.clip != levelMusic)
             {
