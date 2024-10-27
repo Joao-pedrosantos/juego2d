@@ -571,5 +571,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45895688db417bd4cb95cba59c31a4ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 20
-  knockback: {x: 0, y: 0}
+  attackDamage: 10
+  knockback: {x: 10, y: 0}
