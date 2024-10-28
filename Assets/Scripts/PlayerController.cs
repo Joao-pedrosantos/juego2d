@@ -29,6 +29,9 @@ public class PlayerController : MonoBehaviour
     public AudioClip attackClip;        // The attack sound clip
     public AudioClip jumpClip;          // The jump sound clip
 
+    public AudioClip walkingStoneClip; // Footstep sound for walking on stone
+    public AudioClip runningStoneClip; // Footstep sound for running on stone
+
     public AudioSource hitAudio;   // Separate AudioSource for hit sound
     public AudioClip hitClip;      // The hit sound clip
 
@@ -224,21 +227,33 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+
     private void HandleFootsteps()
     {
-        if (IsMoving && touchingDirections.IsGrounded)
+        // Check if the current scene is 3GameScene
+        if (SceneManager.GetActiveScene().name == "3GameScene")
         {
-            if (!footstepAudio.isPlaying)
+            // Play sound only if the character is moving and grounded
+            if (IsMoving && touchingDirections.IsGrounded)
             {
-                footstepAudio.Play();
+                // Set the correct audio clip based on walking or running
+                footstepAudio.clip = IsRunning ? runningStoneClip : walkingStoneClip;
+                footstepAudio.pitch = IsRunning ? runPitch : walkPitch;
+
+                // Ensure the correct clip is playing
+                if (!footstepAudio.isPlaying || footstepAudio.clip != (IsRunning ? runningStoneClip : walkingStoneClip))
+                {
+                    footstepAudio.Play();
+                }
             }
-            footstepAudio.pitch = IsRunning ? runPitch : walkPitch;
-        }
-        else if (footstepAudio.isPlaying)
-        {
-            footstepAudio.Stop();
+            else if (footstepAudio.isPlaying) // Stop sound when not moving or airborne
+            {
+                footstepAudio.Stop();
+            }
         }
     }
+
 
     // Input callbacks
     public void OnMove(InputAction.CallbackContext context)
