@@ -17,10 +17,11 @@ public class PlayerController : MonoBehaviour
     private bool runInputWhileAirborne;
     private Vector2 moveInput;
 
+    private bool isDead = false;
+
     private float idleTime = 0f;
     private float idleThreshold = 0.3f;
     private float idleAcceleration = -2f;
-
 
     // Audio-related fields
     public AudioSource footstepAudio;   // For footstep sounds
@@ -32,8 +33,11 @@ public class PlayerController : MonoBehaviour
     public AudioClip walkingStoneClip; // Footstep sound for walking on stone
     public AudioClip runningStoneClip; // Footstep sound for running on stone
 
-    public AudioSource hitAudio;   // Separate AudioSource for hit sound
-    public AudioClip hitClip;      // The hit sound clip
+    public AudioSource hitAudio;        // Separate AudioSource for hit sound
+    public AudioClip[] hitClips;        // Array of hit sound clips
+
+    public AudioSource deathAudio;      // Separate AudioSource for death sound
+    public AudioClip deathClip;         // The death sound clip
 
     public float walkPitch = 0.8f;
     public float runPitch = 1.3f;
@@ -134,15 +138,14 @@ public class PlayerController : MonoBehaviour
             animator.SetBool(AnimationStrings.isAlive, false);
         }
 
-        CheckVictoryConditions();   
+        CheckVictoryConditions();
     }
-
 
     private void WindEffect()
     {
         if (SceneManager.GetActiveScene().name == "2GameScene")
         {
-            if (!IsMoving)
+            if (!IsMoving && touchingDirections.IsGrounded)
             {
                 idleTime += Time.deltaTime;
                 if (idleTime >= idleThreshold)
@@ -156,8 +159,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
- 
 
     // Handles the main movement logic
     private void HandleMovement()
@@ -232,8 +233,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-
     private void HandleFootsteps()
     {
         // Check if the current scene is 3GameScene
@@ -258,7 +257,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
 
     // Input callbacks
     public void OnMove(InputAction.CallbackContext context)
@@ -326,18 +324,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-public void OnHit(int damage, Vector2 knockback)
-{
-    // Apply knockback to the player
-    rb.velocity = new Vector2(knockback.x, rb.velocity.y + knockback.y);
-    
-    // Play the hit sound
-    if (hitAudio != null && hitClip != null)
+    public void OnHit(int damage, Vector2 knockback)
     {
-        hitAudio.PlayOneShot(hitClip); // Play hit sound without interrupting other sounds
-    }
-}
+        // Apply knockback to the player
+        rb.velocity = new Vector2(knockback.x, rb.velocity.y + knockback.y);
 
+        // Play a random hit sound
+        if (hitAudio != null && hitClips != null && hitClips.Length > 0)
+        {
+            int index = Random.Range(0, hitClips.Length);
+            AudioClip clipToPlay = hitClips[index];
+            hitAudio.PlayOneShot(clipToPlay);
+        }
+    }
 
     private void SetFacingDirection(Vector2 moveInput)
     {
@@ -353,15 +352,24 @@ public void OnHit(int damage, Vector2 knockback)
 
     public void Respawn()
     {
-        GameOverPanel.SetActive(false); 
+        GameOverPanel.SetActive(false);
         // Recarrega a cena atual
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        isDead = false;
     }
 
     public void GameOver()
     {
         animator.SetBool(AnimationStrings.isAlive, false);
         GameOverPanel.SetActive(true);
+
+        // Play death sound
+        if (deathAudio != null && deathClip != null && !isDead)
+        {
+            deathAudio.PlayOneShot(deathClip);
+            isDead = true;
+            
+        }
     }
 
     void CheckVictoryConditions()
