@@ -54,4 +54,21 @@ public class PauseMenuScript : MonoBehaviour
     {
         Application.Quit();
     }
+    public void GoToNextLevel()
+    {
+        int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        
+        // Verifica se o índice da próxima cena é válido
+        if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene(nextSceneIndex);
+        }
+        else
+        {
+            // Se não houver próxima cena, pode carregar o Main Menu ou encerrar o jogo
+            SceneManager.LoadScene("MainMenu"); // substitua "MainMenu" pelo nome correto da cena do menu
+        }
+        
+        Time.timeScale = 1f;
+    }
 }

@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
 
     // You Win flags
     public GameObject VictoryPanel;
-    public float victoryThreshold = 150f; // Defina a posição para vitória
+    public float victoryThreshold = 0; // Defina a posição para vitória
 
     // Properties
     public bool IsMoving
@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
             GameOver();
         }
     }
-    
+
     private void FixedUpdate()
     {
         if (!damageable.LockVelocity)
@@ -134,10 +134,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool(AnimationStrings.isAlive, false);
         }
 
-        if (transform.position.x >= victoryThreshold)
-        {
-            Victory();
-        }
+        CheckVictoryConditions();   
     }
 
 
@@ -365,6 +362,16 @@ public void OnHit(int damage, Vector2 knockback)
     {
         animator.SetBool(AnimationStrings.isAlive, false);
         GameOverPanel.SetActive(true);
+    }
+
+    void CheckVictoryConditions()
+    {
+        // Verifica se todos os inimigos foram destruídos
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Skeleton");
+        if (enemies.Length == 0 && transform.position.x > victoryThreshold)
+        {
+            Victory();
+        }
     }
 
     public void Victory()
