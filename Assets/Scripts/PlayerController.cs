@@ -314,7 +314,7 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger(AnimationStrings.attackTrigger);
 
             // Play attack sound
-            if (attackAudio != null && attackClip != null)
+            if (attackAudio != null && attackClip != null && touchingDirections.IsGrounded)
             {
                 attackAudio.PlayOneShot(attackClip);  // Play attack sound without interrupting other sounds
             }

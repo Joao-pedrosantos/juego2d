@@ -39,6 +39,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background Light
+    uniqueID: 2528660753
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
