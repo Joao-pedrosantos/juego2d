@@ -108,6 +108,14 @@ public class PlayerController : MonoBehaviour
         playerCollider = GetComponent<Collider2D>();
     }
 
+    private void Update()
+    {
+        if (!IsAlive)
+        {
+            GameOver();
+        }
+    }
+    
     private void FixedUpdate()
     {
         if (!damageable.LockVelocity)
@@ -348,8 +356,9 @@ public void OnHit(int damage, Vector2 knockback)
 
     public void Respawn()
     {
-        GameOverPanel.SetActive(false);
-        SceneManager.LoadScene("GameScene");
+        GameOverPanel.SetActive(false); 
+        // Recarrega a cena atual
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void GameOver()
