@@ -188,6 +188,17 @@
                 },
                 {
                     "name": "",
+                    "id": "10b0a3dc-6135-45f8-9b2f-babaf19f997e",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "74791a70-88d1-43cf-a54f-0ab7e0d557ac",
                     "path": "<Keyboard>/leftShift",
                     "interactions": "",

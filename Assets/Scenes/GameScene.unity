@@ -13586,7 +13586,6 @@ GameObject:
   - component: {fileID: 1281866299}
   - component: {fileID: 1281866298}
   - component: {fileID: 1281866297}
-  - component: {fileID: 1281866296}
   m_Layer: 6
   m_Name: Platforms
   m_TagString: Untagged
@@ -13609,25 +13608,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1930358208}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!251 &1281866296
-PlatformEffector2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1281866294}
-  m_Enabled: 1
-  m_UseColliderMask: 0
-  m_ColliderMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RotationalOffset: 0
-  m_UseOneWay: 1
-  m_UseOneWayGrouping: 0
-  m_SurfaceArc: 180
-  m_UseSideFriction: 0
-  m_UseSideBounce: 0
-  m_SideArc: 1
 --- !u!66 &1281866297
 CompositeCollider2D:
   m_ObjectHideFlags: 0
@@ -13658,7 +13638,7 @@ CompositeCollider2D:
     serializedVersion: 2
     m_Bits: 4294967295
   m_IsTrigger: 0
-  m_UsedByEffector: 1
+  m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_GeometryType: 0
@@ -33325,6 +33305,10 @@ PrefabInstance:
       propertyPath: sound2
       value: 
       objectReference: {fileID: 8300000, guid: 64555624c52d202469613f55cdfab8b2, type: 3}
+    - target: {fileID: 269013139210280868, guid: 6f8190ac63273a14eab00484f1d7bae9, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 293706353}
     - target: {fileID: 1831144693294777561, guid: 6f8190ac63273a14eab00484f1d7bae9, type: 3}
       propertyPath: m_Name
       value: GoblinEnemy

@@ -312,12 +312,12 @@ public class PlayerController : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.started && CanMove)
+        if (context.started && CanMove && touchingDirections.IsGrounded)
         {
             animator.SetTrigger(AnimationStrings.attackTrigger);
 
             // Play attack sound
-            if (attackAudio != null && attackClip != null && touchingDirections.IsGrounded)
+            if (attackAudio != null && attackClip != null)
             {
                 attackAudio.PlayOneShot(attackClip);  // Play attack sound without interrupting other sounds
             }
@@ -340,14 +340,17 @@ public class PlayerController : MonoBehaviour
 
     private void SetFacingDirection(Vector2 moveInput)
     {
-        if (moveInput.x > 0 && !IsFacingRight)
-        {
-            IsFacingRight = true;
-        }
-        else if (moveInput.x < 0 && IsFacingRight)
-        {
-            IsFacingRight = false;
-        }
+	if (CanMove)
+	{
+        	if (moveInput.x > 0 && !IsFacingRight)
+        	{
+            	IsFacingRight = true;
+        	}
+        	else if (moveInput.x < 0 && IsFacingRight)
+        	{
+            	IsFacingRight = false;
+        	}
+	}
     }
 
     public void Respawn()
