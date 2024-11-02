@@ -116403,6 +116403,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1348405555}
     - target: {fileID: 2508371939240735467, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
+      propertyPath: gameOverHeight
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508371939240735467, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
       propertyPath: victoryThreshold
       value: 266
       objectReference: {fileID: 0}
