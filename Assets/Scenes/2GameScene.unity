@@ -112480,7 +112480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e02a0ac6df4de1b478f387db64dfc55f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyDamageable: {fileID: 0}
+  enemyDamageable: {fileID: 5458940669575762228}
   healthBarFill: {fileID: 1672226930}
 --- !u!114 &1732820073
 MonoBehaviour:
@@ -116531,6 +116531,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce3a08dbf8fd01a49a898df7d20563d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5458940669575762228 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1630280456457908642, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
+  m_PrefabInstance: {fileID: 5458940669575762225}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbdd537b511277842afecd385384425d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &6003313805594873484
