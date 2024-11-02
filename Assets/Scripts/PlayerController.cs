@@ -137,8 +137,14 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool(AnimationStrings.isAlive, false);
         }
-
-        CheckVictoryConditions();
+        if (SceneManager.GetActiveScene().name == "2GameScene" || SceneManager.GetActiveScene().name == "GameScene"){
+            CheckVictoryConditions();
+        }
+        if (SceneManager.GetActiveScene().name == "3GameScene")
+        {
+            CheckVictoryConditionsMap3();
+        }
+        
     }
 
     private void WindEffect()
@@ -375,10 +381,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void CheckVictoryConditions()
+    public void CheckVictoryConditions()
     {
         // Verifica se todos os inimigos foram destruídos
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Skeleton");
+        if (enemies.Length == 0 && transform.position.x > victoryThreshold)
+        {
+            Victory();
+        }
+    }
+
+    public void CheckVictoryConditionsMap3()
+    {
+        // Verifica se todos os inimigos foram destruídos
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Boss");
         if (enemies.Length == 0 && transform.position.x > victoryThreshold)
         {
             Victory();
