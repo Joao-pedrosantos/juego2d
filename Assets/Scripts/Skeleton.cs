@@ -11,13 +11,16 @@ public class Skeleton : MonoBehaviour
     public DetectionZone cliffDetectionZone;
     public Transform player;
 
+    [SerializeField] private float directionChangeCooldown = 1.0f; // Minimum time before changing direction
+    private float directionChangeTimer = 0.0f; // Timer to track direction change
+
     Rigidbody2D rb;
     TouchingDirections touchingDirections;
     Animator animator;
     Damageable damageable;
     AudioSource audioSource;
 
-    public AudioClip[] skeletonSounds;  // Array for storing 6 sound clips
+    public AudioClip[] skeletonSounds;
 
     public enum WalkableDirection { Right, Left }
 
@@ -27,28 +30,38 @@ public class Skeleton : MonoBehaviour
     public WalkableDirection WalkDirection
     {
         get { return _walkDirection; }
-        set {
+        set
+        {
             if (_walkDirection != value)
             {
-                gameObject.transform.localScale = new Vector2(gameObject.transform.localScale.x * -1, gameObject.transform.localScale.y);
+                // Only allow direction change if the timer has elapsed
+                if (directionChangeTimer <= 0f)
+                {
+                    // Flip the sprite and update direction vector
+                    gameObject.transform.localScale = new Vector2(gameObject.transform.localScale.x * -1, gameObject.transform.localScale.y);
 
-                if (value == WalkableDirection.Right)
-                {
-                    walkDirectionVector = Vector2.right;
-                }
-                else if (value == WalkableDirection.Left)
-                {
-                    walkDirectionVector = Vector2.left;
+                    if (value == WalkableDirection.Right)
+                    {
+                        walkDirectionVector = Vector2.right;
+                    }
+                    else if (value == WalkableDirection.Left)
+                    {
+                        walkDirectionVector = Vector2.left;
+                    }
+
+                    // Reset the timer after changing direction
+                    directionChangeTimer = directionChangeCooldown;
                 }
             }
 
             _walkDirection = value;
-            }
         }
+    }
 
     public bool _hasTarget = false;
 
-    public bool HasTarget {
+    public bool HasTarget
+    {
         get { return _hasTarget; }
         private set
         {
@@ -74,11 +87,16 @@ public class Skeleton : MonoBehaviour
         }
     }
 
-    public float AttackCooldown { get {
+    public float AttackCooldown
+    {
+        get
+        {
             return animator.GetFloat(AnimationStrings.attackCooldown);
-    } private set {
+        }
+        private set
+        {
             animator.SetFloat(AnimationStrings.attackCooldown, Mathf.Max(value, 0));
-    }
+        }
     }
 
     private void Awake()
@@ -87,22 +105,28 @@ public class Skeleton : MonoBehaviour
         touchingDirections = GetComponent<TouchingDirections>();
         animator = GetComponent<Animator>();
         damageable = GetComponent<Damageable>();
-        audioSource = GetComponent<AudioSource>();  // Initialize the AudioSource
+        audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         HasTarget = attackZone.detectedColliders.Count > 0;
+
+        // Update the attack cooldown timer
         if (AttackCooldown > 0)
         {
-        AttackCooldown -= Time.deltaTime;
+            AttackCooldown -= Time.deltaTime;
+        }
+
+        // Update the direction change timer
+        if (directionChangeTimer > 0)
+        {
+            directionChangeTimer -= Time.deltaTime;
         }
     }
 
     private void FixedUpdate()
     {
-
         if (touchingDirections.IsGrounded && touchingDirections.IsOnWall)
         {
             FlipDirection();
@@ -116,19 +140,23 @@ public class Skeleton : MonoBehaviour
                 PlayRandomSound();
             }
             else
+            {
                 rb.velocity = new Vector2(Mathf.Lerp(rb.velocity.x, 0, walkStopRate), rb.velocity.y);
+            }
         }
     }
 
     private void FollowPlayer()
     {
-        if (player.position.x > transform.position.x)
+        // Check if we need to change direction based on player position
+        if ((player.position.x > transform.position.x && WalkDirection == WalkableDirection.Left) ||
+            (player.position.x < transform.position.x && WalkDirection == WalkableDirection.Right))
         {
-            WalkDirection = WalkableDirection.Right;
-        }
-        else
-        {
-            WalkDirection = WalkableDirection.Left;
+            // Only change direction if the timer has elapsed
+            if (directionChangeTimer <= 0f)
+            {
+                WalkDirection = player.position.x > transform.position.x ? WalkableDirection.Right : WalkableDirection.Left;
+            }
         }
 
         rb.velocity = new Vector2(walkSpeed * walkDirectionVector.x, rb.velocity.y);
@@ -136,18 +164,8 @@ public class Skeleton : MonoBehaviour
 
     private void FlipDirection()
     {
-        if (WalkDirection == WalkableDirection.Right)
-        {
-            WalkDirection = WalkableDirection.Left;
-        }
-        else if (WalkDirection == WalkableDirection.Left)
-        {
-            WalkDirection = WalkableDirection.Right;
-        }
-        else
-        {
-            Debug.LogError("Current walk direction is not set to Left or Right");
-        }
+        // Flip direction immediately if touching a wall
+        WalkDirection = (WalkDirection == WalkableDirection.Right) ? WalkableDirection.Left : WalkableDirection.Right;
     }
 
     public void OnHit(int damage, Vector2 knockback)

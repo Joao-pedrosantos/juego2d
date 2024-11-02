@@ -38,9 +38,9 @@ Material:
     m_Ints: []
     m_Floats:
     - _Scale: 100
-    - _Strength: 0.04
+    - _Strength: 0.05
     m_Colors:
-    - _Color: {r: 0.5660378, g: 0.5313279, b: 0.5313279, a: 0}
+    - _Color: {r: 0.6075471, g: 0.6075471, b: 0.6075471, a: 0.16470589}
     - _Velocity: {r: 0.06, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5283891916718688336

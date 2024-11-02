@@ -490,7 +490,7 @@ GameObject:
   - component: {fileID: 2345937016549673730}
   - component: {fileID: 8063404305782735680}
   m_Layer: 10
-  m_Name: HitoxDetection
+  m_Name: HitboxDetection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
