@@ -37,6 +37,9 @@ public class GoblinBoss : MonoBehaviour
     private bool isVisible = false;
 
     private bool hasPlayedComboSound = false;
+    public AudioClip bossAppearanceMusic; // Add this field for the boss music
+
+    private bool hasPlayedBossMusic = false; // Track if boss music has been played
 
     private const string ComboAttackAnimationName = "goblinboss_comboattack";
 
@@ -261,6 +264,15 @@ public class GoblinBoss : MonoBehaviour
     void OnBecameVisible()
     {
         isVisible = true;
+
+        // Play the boss appearance music if it hasn't been played yet
+        if (!hasPlayedBossMusic && bossAppearanceMusic != null)
+        {
+            audioSource.clip = bossAppearanceMusic;
+            audioSource.loop = false; // Ensure it plays only once
+            audioSource.Play();
+            hasPlayedBossMusic = true; // Set the flag so it only plays once
+        }
     }
 
     void OnBecameInvisible()
