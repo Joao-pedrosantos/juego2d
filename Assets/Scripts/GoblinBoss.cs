@@ -152,6 +152,12 @@ public class GoblinBoss : MonoBehaviour
         {
             directionChangeTimer -= Time.deltaTime;
         }
+
+        if (hasPlayedBossMusic && !audioSource.isPlaying)
+        {
+            PersistentAudio.instance.PlayBackgroundMusic();
+            hasPlayedBossMusic = false;  // Reset if you want the boss music to play only once
+        }
     }
 
 
@@ -268,12 +274,16 @@ public class GoblinBoss : MonoBehaviour
         // Play the boss appearance music if it hasn't been played yet
         if (!hasPlayedBossMusic && bossAppearanceMusic != null)
         {
+            // Stop the background music
+            PersistentAudio.instance.StopBackgroundMusic();
+
             audioSource.clip = bossAppearanceMusic;
             audioSource.loop = false; // Ensure it plays only once
             audioSource.Play();
             hasPlayedBossMusic = true; // Set the flag so it only plays once
         }
     }
+
 
     void OnBecameInvisible()
     {

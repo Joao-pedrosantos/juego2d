@@ -286,7 +286,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainMenuMusic: {fileID: 8300000, guid: 6203b1c6e5970a34ea830b95be01954f, type: 3}
-  levelMusic: {fileID: 8300000, guid: 867ff0594f17a6b44b3de9c689b8d86d, type: 3}
+  firstLevel: {fileID: 8300000, guid: 6b6cdf2b4453b3e49a354885b9683bd9, type: 3}
+  secondLevel: {fileID: 8300000, guid: 222241e48691ded46bd5ffe97e7389bc, type: 3}
+  thirdLevel: {fileID: 8300000, guid: 13b54cab0415de240acb8385bf15d033, type: 3}
 --- !u!82 &763869333
 AudioSource:
   m_ObjectHideFlags: 0

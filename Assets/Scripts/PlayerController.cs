@@ -262,6 +262,22 @@ public class PlayerController : MonoBehaviour
                 footstepAudio.Stop();
             }
         }
+
+        else{
+
+            if (IsMoving && touchingDirections.IsGrounded)
+                {
+                    if (!footstepAudio.isPlaying)
+                    {
+                        footstepAudio.Play();
+                    }
+                    footstepAudio.pitch = IsRunning ? runPitch : walkPitch;
+                }
+        else if (footstepAudio.isPlaying)
+        {
+            footstepAudio.Stop();
+        }
+        }
     }
 
     // Input callbacks

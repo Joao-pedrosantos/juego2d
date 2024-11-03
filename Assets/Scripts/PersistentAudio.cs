@@ -3,50 +3,43 @@ using UnityEngine.SceneManagement;
 
 public class PersistentAudio : MonoBehaviour
 {
-    private static PersistentAudio instance;
+    public static PersistentAudio instance;  // Made public
 
-    // Add an AudioSource to play the audio clips
     private AudioSource audioSource;
 
-    // Create an array to store audio clips
-    public AudioClip mainMenuMusic;   // Music for both scene 0 and scene 1
-    public AudioClip levelMusic;      // Music for scene 2 (first level)
+    public AudioClip mainMenuMusic;
+    public AudioClip firstLevel;
+    public AudioClip secondLevel;
+    public AudioClip thirdLevel;
 
     private void Awake()
     {
-        // Check if there is already an instance of PersistentAudio
         if (instance == null)
         {
-            instance = this;  // Set this as the active instance
-            DontDestroyOnLoad(gameObject);  // Prevent destruction on scene load
+            instance = this;
+            DontDestroyOnLoad(gameObject);
 
-            // Get the AudioSource component or add one if it doesn't exist
             audioSource = GetComponent<AudioSource>();
             if (audioSource == null)
             {
                 audioSource = gameObject.AddComponent<AudioSource>();
             }
 
-            // Register for scene change events
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else if (instance != this)
         {
-            Destroy(gameObject);  // Destroy duplicate instances
+            Destroy(gameObject);
         }
     }
 
-    // This method is called whenever a new scene is loaded
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Play the appropriate audio for the new scene
         PlayMusicForScene(scene.buildIndex);
     }
 
-    // Method to play different music based on the scene index
     private void PlayMusicForScene(int sceneIndex)
     {
-        // If the scene is either 0 (Main Menu) or 1 (Settings Menu), play the main menu music
         if (sceneIndex == 0 || sceneIndex == 1)
         {
             if (audioSource.clip != mainMenuMusic)
@@ -55,14 +48,40 @@ public class PersistentAudio : MonoBehaviour
                 audioSource.Play();
             }
         }
-        // If the scene is 2 (First Level), play the level music
-        else if (sceneIndex == 2 || sceneIndex == 3 || sceneIndex == 4) 
+        else if (sceneIndex == 2)
         {
-            if (audioSource.clip != levelMusic)
+            if (audioSource.clip != firstLevel)
             {
-                audioSource.clip = levelMusic;
+                audioSource.clip = firstLevel;
                 audioSource.Play();
             }
         }
+        else if (sceneIndex == 3)
+        {
+            if (audioSource.clip != secondLevel)
+            {
+                audioSource.clip = secondLevel;
+                audioSource.Play();
+            }
+        }
+        else if (sceneIndex == 4)
+        {
+            if (audioSource.clip != thirdLevel)
+            {
+                audioSource.clip = thirdLevel;
+                audioSource.Play();
+            }
+        }
+    }
+
+    // Add these methods
+    public void StopBackgroundMusic()
+    {
+        audioSource.Stop();
+    }
+
+    public void PlayBackgroundMusic()
+    {
+        audioSource.Play();
     }
 }
