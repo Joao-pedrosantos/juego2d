@@ -11,24 +11,34 @@ public class GoblinBoss : MonoBehaviour
     public DetectionZone cliffDetectionZone;
     public Transform player;
 
-    [SerializeField] private float directionChangeCooldown = 1.0f; // Minimum time before changing direction
-    private float directionChangeTimer = 0.0f; // Timer to track direction change
-    
-    [Range(0f, 1f)]
-    public float comboAttackProbability = 0.5f; // 70% chance for combo attack
+    [SerializeField] private float directionChangeCooldown = 1.0f;
+    private float directionChangeTimer = 0.0f;
 
-    Rigidbody2D rb;
-    TouchingDirections touchingDirections;
-    Animator animator;
-    Damageable damageable;
-    AudioSource audioSource;
+    [Range(0f, 1f)]
+    public float comboAttackProbability = 0.5f;
+
+    private Rigidbody2D rb;
+    private TouchingDirections touchingDirections;
+    private Animator animator;
+    private Damageable damageable;
+    private AudioSource audioSource;
+    private AudioSource walkingAudioSource;
 
     public AudioClip[] goblinBossSounds;
+    public AudioClip dashAttackSound;
+    public AudioClip comboAttackSound;
+    public AudioClip walkingSound;
 
     public enum WalkableDirection { Right, Left }
 
     private WalkableDirection _walkDirection;
     private Vector2 walkDirectionVector = Vector2.right;
+
+    private bool isVisible = false;
+
+    private bool hasPlayedComboSound = false;
+
+    private const string ComboAttackAnimationName = "goblinboss_comboattack";
 
     public WalkableDirection WalkDirection
     {
@@ -41,7 +51,7 @@ public class GoblinBoss : MonoBehaviour
                 if (directionChangeTimer <= 0f)
                 {
                     // Flip the sprite and update direction vector
-                    gameObject.transform.localScale = new Vector2(gameObject.transform.localScale.x * -1, gameObject.transform.localScale.y);
+                    transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y);
 
                     if (value == WalkableDirection.Right)
                     {
@@ -61,7 +71,7 @@ public class GoblinBoss : MonoBehaviour
         }
     }
 
-    public bool _hasTarget = false;
+    private bool _hasTarget = false;
 
     public bool HasTarget
     {
@@ -100,24 +110,47 @@ public class GoblinBoss : MonoBehaviour
         animator = GetComponent<Animator>();
         damageable = GetComponent<Damageable>();
         audioSource = GetComponent<AudioSource>();
+
+        // Add a separate AudioSource for walking sound
+        walkingAudioSource = gameObject.AddComponent<AudioSource>();
+        walkingAudioSource.playOnAwake = false;
+        walkingAudioSource.loop = true;
+        walkingAudioSource.spatialBlend = 0f; // 2D sound
     }
 
     void Update()
     {
+        // Check if the current animation is "goblinboss_comboattack"
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName(ComboAttackAnimationName))
+        {
+            // Play the combo attack sound only once per animation
+            if (!hasPlayedComboSound)
+            {
+                PlayComboAttackSound();
+                hasPlayedComboSound = true;
+            }
+        }
+        else
+        {
+            // Reset the flag when not in the combo attack animation
+            hasPlayedComboSound = false;
+        }
+
+        // Other existing logic for updating target and cooldown timers
         HasTarget = attackZone.detectedColliders.Count > 0;
 
-        // Update the attack cooldown timer
         if (AttackCooldown > 0)
         {
             AttackCooldown -= Time.deltaTime;
         }
 
-        // Update the direction change timer
         if (directionChangeTimer > 0)
         {
             directionChangeTimer -= Time.deltaTime;
         }
     }
+
 
     private void FixedUpdate()
     {
@@ -132,10 +165,12 @@ public class GoblinBoss : MonoBehaviour
             {
                 FollowPlayer();
                 PlayRandomSound();
+                PlayWalkingSound();
             }
             else
             {
                 rb.velocity = new Vector2(Mathf.Lerp(rb.velocity.x, 0, walkStopRate), rb.velocity.y);
+                StopWalkingSound();
             }
         }
     }
@@ -145,6 +180,20 @@ public class GoblinBoss : MonoBehaviour
         // Move the enemy forward a bit
         Vector2 dashDirection = WalkDirection == WalkableDirection.Right ? Vector2.right : Vector2.left;
         rb.velocity = new Vector2(dashDirection.x * dashSpeed, rb.velocity.y);
+
+        // Play dash attack sound if visible
+        if (isVisible && dashAttackSound != null)
+        {
+            audioSource.PlayOneShot(dashAttackSound);
+        }
+    }
+
+    public void PlayComboAttackSound()
+    {
+        if (isVisible && comboAttackSound != null)
+        {
+            audioSource.PlayOneShot(comboAttackSound);
+        }
     }
 
     private void FollowPlayer()
@@ -184,11 +233,39 @@ public class GoblinBoss : MonoBehaviour
 
     private void PlayRandomSound()
     {
-        if (!audioSource.isPlaying && goblinBossSounds.Length > 0)
+        if (isVisible && !audioSource.isPlaying && goblinBossSounds.Length > 0)
         {
             int randomIndex = Random.Range(0, goblinBossSounds.Length);
             audioSource.clip = goblinBossSounds[randomIndex];
             audioSource.Play();
         }
+    }
+
+    private void PlayWalkingSound()
+    {
+        if (isVisible && walkingSound != null && !walkingAudioSource.isPlaying)
+        {
+            walkingAudioSource.clip = walkingSound;
+            walkingAudioSource.Play();
+        }
+    }
+
+    private void StopWalkingSound()
+    {
+        if (walkingAudioSource.isPlaying)
+        {
+            walkingAudioSource.Stop();
+        }
+    }
+
+    void OnBecameVisible()
+    {
+        isVisible = true;
+    }
+
+    void OnBecameInvisible()
+    {
+        isVisible = false;
+        StopWalkingSound(); // Stop the walking sound when not visible
     }
 }
