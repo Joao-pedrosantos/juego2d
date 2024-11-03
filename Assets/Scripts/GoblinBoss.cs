@@ -90,7 +90,7 @@ public class GoblinBoss : MonoBehaviour
     {
         get
         {
-            return animator.GetBool(AnimationStrings.canMove);
+            return animator.GetBool(AnimationStrings.canMove) && damageable.IsAlive;
         }
     }
 

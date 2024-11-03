@@ -362,17 +362,14 @@ public class PlayerController : MonoBehaviour
 
     private void SetFacingDirection(Vector2 moveInput)
     {
-	if (CanMove)
-	{
-        	if (moveInput.x > 0 && !IsFacingRight)
-        	{
-            	IsFacingRight = true;
-        	}
-        	else if (moveInput.x < 0 && IsFacingRight)
-        	{
-            	IsFacingRight = false;
-        	}
-	}
+        if (moveInput.x > 0 && !IsFacingRight)
+        {
+            IsFacingRight = true;
+        }
+        else if (moveInput.x < 0 && IsFacingRight)
+        {
+            IsFacingRight = false;
+        }
     }
 
     public void Respawn()
