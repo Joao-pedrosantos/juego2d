@@ -134,7 +134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 5
   runSpeed: 8
-  jumpImpulse: 9.5
+  jumpImpulse: 10.5
   airWalkSpeed: 3
   airRunSpeed: 6
   maxVerticalSpeed: 10

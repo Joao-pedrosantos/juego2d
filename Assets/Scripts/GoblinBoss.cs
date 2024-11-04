@@ -153,11 +153,11 @@ public class GoblinBoss : MonoBehaviour
             directionChangeTimer -= Time.deltaTime;
         }
 
-        if (hasPlayedBossMusic && !audioSource.isPlaying)
-        {
-            PersistentAudio.instance.PlayBackgroundMusic();
-            hasPlayedBossMusic = false;  // Reset if you want the boss music to play only once
-        }
+        //if (hasPlayedBossMusic && !audioSource.isPlaying)
+        //{
+        //    PersistentAudio.instance.PlayBackgroundMusic();
+            //hasPlayedBossMusic = false;  // Reset if you want the boss music to play only once
+        //}
     }
 
 
@@ -214,7 +214,7 @@ public class GoblinBoss : MonoBehaviour
             // Only change direction if the timer has elapsed
             if (directionChangeTimer <= 0f)
             {
-                WalkDirection = player.position.x > transform.position.x ? WalkableDirection.Right : WalkableDirection.Left;
+                FlipDirection();
             }
         }
 
@@ -278,9 +278,9 @@ public class GoblinBoss : MonoBehaviour
             PersistentAudio.instance.StopBackgroundMusic();
 
             audioSource.clip = bossAppearanceMusic;
-            audioSource.loop = false; // Ensure it plays only once
+            //audioSource.loop = false; // Ensure it plays only once
             audioSource.Play();
-            hasPlayedBossMusic = true; // Set the flag so it only plays once
+            //hasPlayedBossMusic = true; // Set the flag so it only plays once
         }
     }
 

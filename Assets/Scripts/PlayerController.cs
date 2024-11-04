@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     // Movement-related fields
     public float walkSpeed = 5f;
     public float runSpeed = 8f;
-    public float jumpImpulse = 8f;
+    public float jumpImpulse = 10.5f;
     public float airWalkSpeed = 3f;
     public float airRunSpeed = 6f;
     public float maxVerticalSpeed = 10f;
@@ -61,6 +61,8 @@ public class PlayerController : MonoBehaviour
     // You Win flags
     public GameObject VictoryPanel;
     public float victoryThreshold = 0; // Defina a posição para vitória
+
+    public GameObject HealthBar;
 
     // Properties
     public bool IsMoving
@@ -408,8 +410,9 @@ public class PlayerController : MonoBehaviour
     {
         // Verifica se todos os inimigos foram destruídos
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Boss");
-        if (enemies.Length == 0 && transform.position.x > victoryThreshold)
+        if (enemies.Length == 0)
         {
+            HealthBar.SetActive(false);
             Victory();
         }
     }
