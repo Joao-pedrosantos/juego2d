@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections), typeof(Damageable))]
@@ -17,13 +16,11 @@ public class PlayerController : MonoBehaviour
 
     // Audio-related fields
     public AudioSource footstepAudio;
-    public AudioSource attackAudio;     // Audio for attack
+    public AudioSource attackAudio;     
     public AudioSource jumpAudio;
-    public AudioClip attackClip;        // Attack sound clip
+    public AudioClip attackClip;        
     public AudioClip jumpClip;
-
-    public AudioClip runningStoneClip;  // Footstep sound for running on stone
-
+    public AudioClip runningStoneClip;  
     public AudioSource deathAudio;      
     public AudioClip deathClip;         
 
@@ -158,25 +155,42 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Input callbacks
-    public void OnMove(InputAction.CallbackContext context)
+    // Touch-based input handlers for movement
+    public void OnMoveLeft(bool isPressed)
     {
-        moveInput = context.ReadValue<Vector2>();
-
-        if (IsAlive && PauseMenuScript.isPaused == false)
+        if (isPressed)
         {
-            IsMoving = moveInput != Vector2.zero;
+            moveInput = Vector2.left;
+            IsMoving = true;
             SetFacingDirection(moveInput);
         }
         else
         {
+            moveInput = Vector2.zero;
             IsMoving = false;
         }
     }
 
-    public void OnJump(InputAction.CallbackContext context)
+    public void OnMoveRight(bool isPressed)
     {
-        if (context.started && touchingDirections.IsGrounded && CanMove)
+        if (isPressed)
+        {
+            moveInput = Vector2.right;
+            IsMoving = true;
+            SetFacingDirection(moveInput);
+        }
+        else
+        {
+            moveInput = Vector2.zero;
+            IsMoving = false;
+        }
+    }
+
+
+    // Touch-based input handlers for jumping
+    public void OnJumpButtonPressed()
+    {
+        if (touchingDirections.IsGrounded && CanMove)
         {
             animator.SetTrigger(AnimationStrings.jumpTrigger);
             rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
@@ -188,9 +202,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnAttack(InputAction.CallbackContext context)
+    // Touch-based input handlers for attacking
+    public void OnAttackButtonPressed()
     {
-        if (context.started && CanMove && touchingDirections.IsGrounded)
+        if (CanMove && touchingDirections.IsGrounded)
         {
             animator.SetTrigger(AnimationStrings.attackTrigger);
 
