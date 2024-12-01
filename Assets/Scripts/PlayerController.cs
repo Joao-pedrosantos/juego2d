@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!damageable.LockVelocity)
+        if (!damageable.LockVelocity && PauseMenuScript.isPaused == false)
         {
             HandleMovement();
         }
@@ -166,7 +166,7 @@ public class PlayerController : MonoBehaviour
     // Touch-based input handlers for movement
     public void OnMoveLeft(bool isPressed)
     {
-        if (isPressed)
+        if (isPressed && CanMove)
         {
             moveInput = Vector2.left;
             IsMoving = true;
@@ -181,7 +181,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnMoveRight(bool isPressed)
     {
-        if (isPressed)
+        if (isPressed && CanMove)
         {
             moveInput = Vector2.right;
             IsMoving = true;

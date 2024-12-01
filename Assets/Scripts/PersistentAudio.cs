@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class PersistentAudio : MonoBehaviour
 {
-    public static PersistentAudio instance;  // Made public
+    public static PersistentAudio instance;  // Singleton instance
 
     private AudioSource audioSource;
 
@@ -33,6 +33,12 @@ public class PersistentAudio : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        // Ensure proper cleanup of sceneLoaded event subscription
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         PlayMusicForScene(scene.buildIndex);
@@ -40,6 +46,17 @@ public class PersistentAudio : MonoBehaviour
 
     private void PlayMusicForScene(int sceneIndex)
     {
+        if (audioSource == null)
+        {
+            Debug.LogWarning("AudioSource is missing or destroyed. Attempting to recreate.");
+            audioSource = GetComponent<AudioSource>();
+            if (audioSource == null)
+            {
+                audioSource = gameObject.AddComponent<AudioSource>();
+            }
+        }
+
+        // Logic for assigning music based on scene index
         if (sceneIndex == 0 || sceneIndex == 1)
         {
             if (audioSource.clip != mainMenuMusic)
@@ -74,14 +91,19 @@ public class PersistentAudio : MonoBehaviour
         }
     }
 
-    // Add these methods
     public void StopBackgroundMusic()
     {
-        audioSource.Stop();
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+        }
     }
 
     public void PlayBackgroundMusic()
     {
-        audioSource.Play();
+        if (audioSource != null)
+        {
+            audioSource.Play();
+        }
     }
 }
