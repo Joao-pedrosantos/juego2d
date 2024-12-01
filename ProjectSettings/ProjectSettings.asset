@@ -764,11 +764,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 4a5ce835-6d78-49a5-b48d-2448780ab6f3
+  cloudProjectId: bf8f4604-bed4-4e5e-affe-38a8f9345cfe
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Eldranor 2024-10-07_11-55-26
-  organizationId: rodme02
+  projectName: Ads
+  organizationId: jpw6
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

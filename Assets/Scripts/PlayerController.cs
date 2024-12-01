@@ -155,6 +155,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Respawn()
+    {
+        GameOverPanel.SetActive(false);
+        // Recarrega a cena atual
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        isDead = false;
+    }
+
     // Touch-based input handlers for movement
     public void OnMoveLeft(bool isPressed)
     {
