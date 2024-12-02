@@ -112551,6 +112551,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8250140643924423080, guid: b6d245f558399ea4a942f8ab4e5b2344, type: 3}
+      propertyPath: enemyDamageable
+      value: 
+      objectReference: {fileID: 5458940669575762226}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -113249,7 +113253,7 @@ PrefabInstance:
       objectReference: {fileID: 519420034}
     - target: {fileID: 2508371939240735467, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
       propertyPath: jumpImpulse
-      value: 4
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2508371939240735467, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
       propertyPath: VictoryPanel
@@ -113379,6 +113383,17 @@ PrefabInstance:
       addedObject: {fileID: 446274511}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
+--- !u!114 &5458940669575762226 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1630280456457908642, guid: 6cab8ea9498b62d4c9b692a2f006e815, type: 3}
+  m_PrefabInstance: {fileID: 5458940669575762225}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbdd537b511277842afecd385384425d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6003313805594873484
 PrefabInstance:
   m_ObjectHideFlags: 0

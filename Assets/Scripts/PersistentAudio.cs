@@ -89,6 +89,10 @@ public class PersistentAudio : MonoBehaviour
                 audioSource.Play();
             }
         }
+        else{
+            audioSource.clip = thirdLevel;
+            audioSource.Play();
+        }
     }
 
     public void StopBackgroundMusic()
