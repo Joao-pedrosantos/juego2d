@@ -79,6 +79,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         touchingDirections = GetComponent<TouchingDirections>();

@@ -28994,7 +28994,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1521778119}
-  - component: {fileID: 1521778118}
   - component: {fileID: 1521778120}
   m_Layer: 0
   m_Name: Ads
@@ -29003,21 +29002,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1521778118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1521778116}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 621081596be41cf4c9a7eb580bb0fe67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _androidGameId: 5740832
-  _iOSGameId: 5740833
-  _testMode: 1
 --- !u!4 &1521778119
 Transform:
   m_ObjectHideFlags: 0
@@ -29042,11 +29026,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1521778116}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0469395fcd1b6a4689099f722b4d24e, type: 3}
+  m_Script: {fileID: 11500000, guid: 3418520332450f32c94bd4813fbb7172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _androidGameId: 5740832
+  _iOSGameId: 5740833
   _androidAdUnitId: Interstitial_Android
-  _iOsAdUnitId: Interstitial_iOS
+  _iOSAdUnitId: Interstitial_iOS
+  _testMode: 1
 --- !u!1 &1703600819
 GameObject:
   m_ObjectHideFlags: 0
@@ -29957,6 +29944,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 5458940669575762226}
+    - target: {fileID: 1323436836698277274, guid: b6d245f558399ea4a942f8ab4e5b2344, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowAd
+      objectReference: {fileID: 0}
+    - target: {fileID: 1323436836698277274, guid: b6d245f558399ea4a942f8ab4e5b2344, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: InterstitialAdsManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1612797272741176719, guid: b6d245f558399ea4a942f8ab4e5b2344, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -29968,7 +29963,7 @@ PrefabInstance:
     - target: {fileID: 4625397934793181161, guid: b6d245f558399ea4a942f8ab4e5b2344, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1521778120}
+      objectReference: {fileID: 0}
     - target: {fileID: 7803320864401404279, guid: b6d245f558399ea4a942f8ab4e5b2344, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
